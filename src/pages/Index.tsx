@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, Menu, X, Star } from "lucide-react";
@@ -34,7 +33,7 @@ const Index = () => {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link to="/" className="text-2xl font-bold text-gray-900">
-                ShopHub
+                Art-Store
               </Link>
             </div>
 
@@ -263,7 +262,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">ShopHub</h3>
+              <h3 className="text-lg font-semibold mb-4">Art-Store</h3>
               <p className="text-gray-400">
                 Your one-stop destination for quality products at unbeatable prices.
               </p>
@@ -296,7 +295,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ShopHub. All rights reserved.</p>
+            <p>&copy; 2024 Art-Store. All rights reserved.</p>
           </div>
         </div>
       </footer>
