@@ -143,5 +143,93 @@ export const products: Product[] = [
     rating: 4,
     reviews: 64,
     inStock: true
+  },
+  {
+    id: 13,
+    name: "Gaming PC RTX 4080",
+    price: 2299.99,
+    description: "High-performance gaming PC with RTX 4080, 32GB RAM, and 1TB NVMe SSD for ultimate gaming experience.",
+    image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 5,
+    reviews: 89,
+    inStock: true
+  },
+  {
+    id: 14,
+    name: "iPhone 15 Pro Max",
+    price: 1199.99,
+    description: "Latest iPhone with A17 Pro chip, titanium design, and advanced camera system with 5x optical zoom.",
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 5,
+    reviews: 324,
+    inStock: true
+  },
+  {
+    id: 15,
+    name: "Samsung Galaxy S24 Ultra",
+    price: 1099.99,
+    description: "Premium Android smartphone with S Pen, 200MP camera, and AI-powered features.",
+    image: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 4,
+    reviews: 256,
+    inStock: true
+  },
+  {
+    id: 16,
+    name: "Gaming Laptop ROG Strix",
+    price: 1799.99,
+    description: "ASUS ROG gaming laptop with RTX 4070, 16GB RAM, and 144Hz display for portable gaming.",
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 5,
+    reviews: 167,
+    inStock: true
+  },
+  {
+    id: 17,
+    name: "Google Pixel 8 Pro",
+    price: 899.99,
+    description: "Advanced Android phone with AI camera features, pure Android experience, and 7 years of updates.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 4,
+    reviews: 198,
+    inStock: true
+  },
+  {
+    id: 18,
+    name: "Custom Gaming PC Builder",
+    price: 1599.99,
+    description: "Mid-range gaming PC with RTX 4060 Ti, AMD Ryzen 7, 16GB RAM, perfect for 1440p gaming.",
+    image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 4,
+    reviews: 134,
+    inStock: true
+  },
+  {
+    id: 19,
+    name: "OnePlus 12",
+    price: 749.99,
+    description: "Flagship killer smartphone with Snapdragon 8 Gen 3, fast charging, and premium build quality.",
+    image: "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 4,
+    reviews: 143,
+    inStock: true
+  },
+  {
+    id: 20,
+    name: "Alienware Aurora R15",
+    price: 3299.99,
+    description: "Ultimate gaming desktop with RTX 4090, Intel i9, liquid cooling, and customizable RGB lighting.",
+    image: "https://images.unsplash.com/photo-1614029951470-ef9eb9952be0?w=500&h=500&fit=crop",
+    category: "electronics",
+    rating: 5,
+    reviews: 76,
+    inStock: true
   }
 ];
