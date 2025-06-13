@@ -1,13 +1,15 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, Filter, ArrowLeft, Star } from "lucide-react";
+import { Search, ArrowLeft, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useCart } from "@/hooks/useCart";
+import { usePagination } from "@/hooks/usePagination";
 import { products } from "@/data/products";
 
 const Products = () => {
@@ -36,6 +38,27 @@ const Products = () => {
           return a.name.localeCompare(b.name);
       }
     });
+
+  // Pagination pour les produits filtrés et triés
+  const {
+    currentPage,
+    totalPages,
+    paginatedData: paginatedProducts,
+    goToPage,
+    goToNextPage,
+    goToPreviousPage,
+    resetPagination,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePagination({
+    data: filteredAndSortedProducts,
+    itemsPerPage: 12,
+  });
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    resetPagination();
+  }, [searchTerm, selectedCategory, sortBy, resetPagination]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -98,12 +121,17 @@ const Products = () => {
 
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-4 text-gray-600">
-          Showing {filteredAndSortedProducts.length} of {products.length} products
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-gray-600">
+            Showing {paginatedProducts.length} of {filteredAndSortedProducts.length} products
+          </div>
+          <div className="text-gray-600">
+            Page {currentPage} of {totalPages}
+          </div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredAndSortedProducts.map((product) => (
+          {paginatedProducts.map((product) => (
             <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
                 <img
@@ -162,6 +190,41 @@ const Products = () => {
           <div className="text-center py-12">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">No products found</h3>
             <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={goToPreviousPage}
+                    className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => goToPage(page)}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={goToNextPage}
+                    className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>

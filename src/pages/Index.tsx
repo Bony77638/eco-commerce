@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useCart } from "@/hooks/useCart";
+import { usePagination } from "@/hooks/usePagination";
 import { products } from "@/data/products";
 
 const Index = () => {
@@ -23,6 +25,27 @@ const Index = () => {
   });
 
   const featuredProducts = products.slice(0, 3);
+
+  // Pagination pour les produits filtrés
+  const {
+    currentPage,
+    totalPages,
+    paginatedData: paginatedProducts,
+    goToPage,
+    goToNextPage,
+    goToPreviousPage,
+    resetPagination,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePagination({
+    data: filteredProducts,
+    itemsPerPage: 8,
+  });
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    resetPagination();
+  }, [searchTerm, selectedCategory, resetPagination]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -213,9 +236,15 @@ const Index = () => {
       {/* Products Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">All Products</h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">All Products</h2>
+            <div className="text-gray-600">
+              Page {currentPage} of {totalPages} ({filteredProducts.length} products)
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
+            {paginatedProducts.map((product) => (
               <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
                 <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
                   <img
@@ -254,6 +283,41 @@ const Index = () => {
               </Card>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-8">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={goToPreviousPage}
+                      className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => goToPage(page)}
+                        isActive={currentPage === page}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={goToNextPage}
+                      className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       </section>
 
