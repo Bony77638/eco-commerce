@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowLeft, Star } from "lucide-react";
@@ -200,17 +199,23 @@ const Products = () => {
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious 
-                    onClick={goToPreviousPage}
-                    className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goToPreviousPage();
+                    }}
+                    className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
                   />
                 </PaginationItem>
                 
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <PaginationItem key={page}>
                     <PaginationLink
-                      onClick={() => goToPage(page)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goToPage(page);
+                      }}
                       isActive={currentPage === page}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:bg-gray-100"
                     >
                       {page}
                     </PaginationLink>
@@ -219,8 +224,11 @@ const Products = () => {
                 
                 <PaginationItem>
                   <PaginationNext 
-                    onClick={goToNextPage}
-                    className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goToNextPage();
+                    }}
+                    className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
                   />
                 </PaginationItem>
               </PaginationContent>
