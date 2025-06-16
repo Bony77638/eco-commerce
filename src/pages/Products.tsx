@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowLeft, Star } from "lucide-react";
@@ -58,6 +59,21 @@ const Products = () => {
   useEffect(() => {
     resetPagination();
   }, [searchTerm, selectedCategory, sortBy, resetPagination]);
+
+  const handlePreviousPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    goToPreviousPage();
+  };
+
+  const handleNextPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    goToNextPage();
+  };
+
+  const handlePageClick = (page: number) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    goToPage(page);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -199,10 +215,7 @@ const Products = () => {
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goToPreviousPage();
-                    }}
+                    onClick={handlePreviousPage}
                     className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
                   />
                 </PaginationItem>
@@ -210,10 +223,7 @@ const Products = () => {
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <PaginationItem key={page}>
                     <PaginationLink
-                      onClick={(e) => {
-                        e.preventDefault();
-                        goToPage(page);
-                      }}
+                      onClick={handlePageClick(page)}
                       isActive={currentPage === page}
                       className="cursor-pointer hover:bg-gray-100"
                     >
@@ -224,10 +234,7 @@ const Products = () => {
                 
                 <PaginationItem>
                   <PaginationNext 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goToNextPage();
-                    }}
+                    onClick={handleNextPage}
                     className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
                   />
                 </PaginationItem>
