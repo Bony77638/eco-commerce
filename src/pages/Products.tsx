@@ -194,7 +194,7 @@ const Products = () => {
           </div>
         )}
 
-        {/* Simple Custom Pagination */}
+        {/* Custom Pagination */}
         {totalPages > 1 && (
           <div className="mt-8 flex justify-center">
             <div className="flex items-center space-x-2">
@@ -254,7 +254,6 @@ const Products = () => {
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                 }`}
-                }
               >
                 Suivant
               </button>
