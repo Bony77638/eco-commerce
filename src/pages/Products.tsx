@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowLeft, Star } from "lucide-react";
@@ -62,18 +63,30 @@ const Products = () => {
 
   const handlePreviousPage = (e: React.MouseEvent) => {
     e.preventDefault();
-    goToPreviousPage();
+    e.stopPropagation();
+    console.log("Previous page clicked, current page:", currentPage, "hasPreviousPage:", hasPreviousPage);
+    if (hasPreviousPage) {
+      goToPreviousPage();
+    }
   };
 
   const handleNextPage = (e: React.MouseEvent) => {
     e.preventDefault();
-    goToNextPage();
+    e.stopPropagation();
+    console.log("Next page clicked, current page:", currentPage, "hasNextPage:", hasNextPage);
+    if (hasNextPage) {
+      goToNextPage();
+    }
   };
 
   const handlePageClick = (page: number) => (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    console.log("Page clicked:", page, "current page:", currentPage);
     goToPage(page);
   };
+
+  console.log("Products pagination state:", { currentPage, totalPages, filteredProductsLength: filteredAndSortedProducts.length, paginatedProductsLength: paginatedProducts.length });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -213,31 +226,35 @@ const Products = () => {
           <div className="mt-8">
             <Pagination>
               <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={handlePreviousPage}
-                    className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
-                  />
-                </PaginationItem>
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={!hasPreviousPage}
+                  className={`flex items-center gap-1 pl-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${!hasPreviousPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  ← Previous
+                </button>
                 
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={handlePageClick(page)}
-                      isActive={currentPage === page}
-                      className="cursor-pointer hover:bg-gray-100"
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
+                  <button
+                    key={page}
+                    onClick={handlePageClick(page)}
+                    className={`flex items-center justify-center h-10 px-4 py-2 text-sm font-medium border ${
+                      currentPage === page
+                        ? "text-blue-600 border-blue-300 bg-blue-50"
+                        : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                    } cursor-pointer`}
+                  >
+                    {page}
+                  </button>
                 ))}
                 
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={handleNextPage}
-                    className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
-                  />
-                </PaginationItem>
+                <button
+                  onClick={handleNextPage}
+                  disabled={!hasNextPage}
+                  className={`flex items-center gap-1 pr-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${!hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  Next →
+                </button>
               </PaginationContent>
             </Pagination>
           </div>
@@ -248,3 +265,4 @@ const Products = () => {
 };
 
 export default Products;
+

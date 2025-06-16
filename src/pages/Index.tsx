@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, Menu, X, Star } from "lucide-react";
@@ -50,18 +49,30 @@ const Index = () => {
 
   const handlePreviousPage = (e: React.MouseEvent) => {
     e.preventDefault();
-    goToPreviousPage();
+    e.stopPropagation();
+    console.log("Previous page clicked, current page:", currentPage, "hasPreviousPage:", hasPreviousPage);
+    if (hasPreviousPage) {
+      goToPreviousPage();
+    }
   };
 
   const handleNextPage = (e: React.MouseEvent) => {
     e.preventDefault();
-    goToNextPage();
+    e.stopPropagation();
+    console.log("Next page clicked, current page:", currentPage, "hasNextPage:", hasNextPage);
+    if (hasNextPage) {
+      goToNextPage();
+    }
   };
 
   const handlePageClick = (page: number) => (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    console.log("Page clicked:", page, "current page:", currentPage);
     goToPage(page);
   };
+
+  console.log("Homepage pagination state:", { currentPage, totalPages, filteredProductsLength: filteredProducts.length, paginatedProductsLength: paginatedProducts.length });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -306,29 +317,38 @@ const Index = () => {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious 
+                    <button
                       onClick={handlePreviousPage}
-                      className={!hasPreviousPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
-                    />
+                      disabled={!hasPreviousPage}
+                      className={`flex items-center gap-1 pl-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${!hasPreviousPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                    >
+                      ← Previous
+                    </button>
                   </PaginationItem>
                   
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
-                      <PaginationLink
+                      <button
                         onClick={handlePageClick(page)}
-                        isActive={currentPage === page}
-                        className="cursor-pointer hover:bg-gray-100"
+                        className={`flex items-center justify-center h-10 px-4 py-2 text-sm font-medium border ${
+                          currentPage === page
+                            ? "text-blue-600 border-blue-300 bg-blue-50"
+                            : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                        } cursor-pointer`}
                       >
                         {page}
-                      </PaginationLink>
+                      </button>
                     </PaginationItem>
                   ))}
                   
                   <PaginationItem>
-                    <PaginationNext 
+                    <button
                       onClick={handleNextPage}
-                      className={!hasNextPage ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-gray-100"}
-                    />
+                      disabled={!hasNextPage}
+                      className={`flex items-center gap-1 pr-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${!hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                    >
+                      Next →
+                    </button>
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
