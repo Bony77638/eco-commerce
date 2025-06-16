@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, Menu, X, Star } from "lucide-react";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useCart } from "@/hooks/useCart";
 import { usePagination } from "@/hooks/usePagination";
 import { products } from "@/data/products";
@@ -46,31 +46,6 @@ const Index = () => {
   useEffect(() => {
     resetPagination();
   }, [searchTerm, selectedCategory, resetPagination]);
-
-  const handlePreviousPage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Previous page clicked, current page:", currentPage, "hasPreviousPage:", hasPreviousPage);
-    if (hasPreviousPage) {
-      goToPreviousPage();
-    }
-  };
-
-  const handleNextPage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Next page clicked, current page:", currentPage, "hasNextPage:", hasNextPage);
-    if (hasNextPage) {
-      goToNextPage();
-    }
-  };
-
-  const handlePageClick = (page: number) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Page clicked:", page, "current page:", currentPage);
-    goToPage(page);
-  };
 
   console.log("Homepage pagination state:", { currentPage, totalPages, filteredProductsLength: filteredProducts.length, paginatedProductsLength: paginatedProducts.length });
 
@@ -311,47 +286,70 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Pagination */}
+          {/* Simple Custom Pagination */}
           {totalPages > 1 && (
-            <div className="mt-8">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <button
-                      onClick={handlePreviousPage}
-                      disabled={!hasPreviousPage}
-                      className={`flex items-center gap-1 pl-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${!hasPreviousPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
-                    >
-                      ← Previous
-                    </button>
-                  </PaginationItem>
+            <div className="mt-8 flex justify-center">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => {
+                    console.log("Previous clicked, current:", currentPage);
+                    goToPreviousPage();
+                  }}
+                  disabled={!hasPreviousPage}
+                  className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                    !hasPreviousPage
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  Précédent
+                </button>
+                
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNumber;
+                  if (totalPages <= 5) {
+                    pageNumber = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNumber = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNumber = totalPages - 4 + i;
+                  } else {
+                    pageNumber = currentPage - 2 + i;
+                  }
                   
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <PaginationItem key={page}>
-                      <button
-                        onClick={handlePageClick(page)}
-                        className={`flex items-center justify-center h-10 px-4 py-2 text-sm font-medium border ${
-                          currentPage === page
-                            ? "text-blue-600 border-blue-300 bg-blue-50"
-                            : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                        } cursor-pointer`}
-                      >
-                        {page}
-                      </button>
-                    </PaginationItem>
-                  ))}
-                  
-                  <PaginationItem>
+                  return (
                     <button
-                      onClick={handleNextPage}
-                      disabled={!hasNextPage}
-                      className={`flex items-center gap-1 pr-2.5 h-10 px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${!hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                      key={pageNumber}
+                      onClick={() => {
+                        console.log("Page clicked:", pageNumber);
+                        goToPage(pageNumber);
+                      }}
+                      className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                        currentPage === pageNumber
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                      }`}
                     >
-                      Next →
+                      {pageNumber}
                     </button>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+                  );
+                })}
+                
+                <button
+                  onClick={() => {
+                    console.log("Next clicked, current:", currentPage);
+                    goToNextPage();
+                  }}
+                  disabled={!hasNextPage}
+                  className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                    !hasNextPage
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  Suivant
+                </button>
+              </div>
             </div>
           )}
         </div>
