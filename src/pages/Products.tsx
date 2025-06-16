@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowLeft, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,24 +18,26 @@ const Products = () => {
 
   const categories = ["all", "electronics", "clothing", "accessories", "home"];
   
-  const filteredAndSortedProducts = products
-    .filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.price - b.price;
-        case "price-high":
-          return b.price - a.price;
-        case "rating":
-          return b.rating - a.rating;
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
+  const filteredAndSortedProducts = useMemo(() => {
+    return products
+      .filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "price-low":
+            return a.price - b.price;
+          case "price-high":
+            return b.price - a.price;
+          case "rating":
+            return b.rating - a.rating;
+          default:
+            return a.name.localeCompare(b.name);
+        }
+      });
+  }, [searchTerm, selectedCategory, sortBy]);
 
   // Pagination pour les produits filtrés et triés
   const {
@@ -199,15 +200,12 @@ const Products = () => {
           <div className="mt-8 flex justify-center">
             <div className="flex items-center space-x-2">
               <button
-                onClick={() => {
-                  console.log("Previous clicked, current:", currentPage);
-                  goToPreviousPage();
-                }}
+                onClick={goToPreviousPage}
                 disabled={!hasPreviousPage}
-                className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
                   !hasPreviousPage
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                 }`}
               >
                 Précédent
@@ -228,14 +226,11 @@ const Products = () => {
                 return (
                   <button
                     key={pageNumber}
-                    onClick={() => {
-                      console.log("Page clicked:", pageNumber);
-                      goToPage(pageNumber);
-                    }}
-                    className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                    onClick={() => goToPage(pageNumber)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
                       currentPage === pageNumber
-                        ? "bg-blue-600 text-white border-blue-600"
-                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                        ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                     }`}
                   >
                     {pageNumber}
@@ -244,15 +239,12 @@ const Products = () => {
               })}
               
               <button
-                onClick={() => {
-                  console.log("Next clicked, current:", currentPage);
-                  goToNextPage();
-                }}
+                onClick={goToNextPage}
                 disabled={!hasNextPage}
-                className={`px-3 py-2 text-sm font-medium rounded-md border ${
+                className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
                   !hasNextPage
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                 }`}
               >
                 Suivant

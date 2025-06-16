@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 interface UsePaginationProps<T> {
   data: T[];
@@ -14,30 +14,35 @@ export const usePagination = <T>({ data, itemsPerPage }: UsePaginationProps<T>) 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+    console.log('Pagination calculation:', { currentPage, startIndex, endIndex, dataLength: data.length });
     return data.slice(startIndex, endIndex);
   }, [data, currentPage, itemsPerPage]);
 
-  const goToPage = (page: number) => {
+  const goToPage = useCallback((page: number) => {
+    console.log('goToPage called with:', page);
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
-  };
+  }, [totalPages]);
 
-  const goToNextPage = () => {
+  const goToNextPage = useCallback(() => {
+    console.log('goToNextPage called, current:', currentPage, 'total:', totalPages);
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage(prev => prev + 1);
     }
-  };
+  }, [currentPage, totalPages]);
 
-  const goToPreviousPage = () => {
+  const goToPreviousPage = useCallback(() => {
+    console.log('goToPreviousPage called, current:', currentPage);
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage(prev => prev - 1);
     }
-  };
+  }, [currentPage]);
 
-  const resetPagination = () => {
+  const resetPagination = useCallback(() => {
+    console.log('resetPagination called');
     setCurrentPage(1);
-  };
+  }, []);
 
   return {
     currentPage,
